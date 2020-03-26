@@ -31,11 +31,9 @@
     var name2 = null;
     //booleans to check if player logged 
     var player1Logged = false;
-    var player2Logged = false;
-    //variables for players selections
+    //variables for players selections (default to player2)
     player1select = null;
     player2select = null;
-
     //wins and losses
     var player1wins = 0;
     var player1losses = 0;
@@ -82,16 +80,25 @@
         });
       } else {
         name2 = name;
-        player2Logged = true;
         player1Logged = false;
         //player name 2 to html
         $("#player2name").html(name);
         database.ref().push({
           name2: name,
           dateAdded: firebase.database.ServerValue.TIMESTAMP
-        })
+        });
       }
+     if (player1Logged === true) {
+         $("#button1Group").removeClass("invisible");
+         $("#round-update-2").html("Player 2 Not Logged in")
+     } else {
+         $("#button2Group").removeClass("invisible");
+         $("#round-update-2").html("Make a Selection!");
+         $("#round-update-1").html("Make a Selection!");
+     }
     })
+
+
     //player 1 enter message
     $("#enterMessage1").on("click", function (event) {
       //press enter to...uh enter...
@@ -130,13 +137,13 @@
       event.preventDefault();
       console.log(player1select);
      //send to firebase 
-      database.ref("/playerStatus/").push( {
+      database.ref("/playerStatus").push( {
         player1select : player1select,
         playerName : name1,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
       })
       //send to update display
-      database.ref("/playerStatus/").on("child_added", function(snapshot) {
+      database.ref("/playerStatus").on("child_added", function(snapshot) {
         console.log(snapshot.val());
       $("#round-update-1").html("You have chosen " + player1select + " !")
       });
@@ -156,7 +163,11 @@
     name2 = data.name2;
     player1select = data.player1select;
     player2select = data.player2select;
-    }
+    
+    //update in HTML
+    $("#player1name").html(data.name1);
+    $("#player2name").html(data.name2);
+    })
 
 
 
@@ -193,7 +204,7 @@
         player2wins ++;
       }
   }
-})
+
 //------------PLAYER 2-------------------------------------
 $("#start-game").on("click", function (event) {
     event.preventDefault();
@@ -283,4 +294,5 @@ $("#start-game").on("click", function (event) {
     } else {
       roundUpdate();
     }
+  })
   })
