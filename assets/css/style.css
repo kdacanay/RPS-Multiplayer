@@ -1,0 +1,79 @@
+/* font-family: 'Spicy Rice', cursive;
+font-family: 'Passion One', cursive;
+font-family: 'Lalezar', cursive;
+font-family: 'Erica One', cursive;
+font-family: 'Miltonian Tattoo', cursive;
+font-family: 'Barrio', cursive; */
+.card {
+    text-align: center;
+}
+
+h3 {
+    text-align: center;
+    font-family: 'Barrio', cursive;
+    font-size: 50px;
+}
+
+h5 {
+    font-family: 'Miltonian Tattoo', cursive;
+}
+
+button {
+    font-family: 'Miltonian Tattoo', cursive;
+}
+
+h6 {
+    font-family: 'Miltonian Tattoo', cursive;
+}
+
+h1 {
+    font-family: 'Barrio', cursive;
+    text-align: center;
+    font-size: 55px;
+}
+
+.card-header {
+    font-family: 'Barrio', cursive;
+}
+
+#round-update {
+    text-align: center;
+    font-family: 'Barrio', cursive;
+    font-size: 30px;
+}
+
+header {
+    padding: 30px;
+    text-align: center;
+}
+
+i {
+    font-size: 50px;
+}
+
+#vstag {
+    font-size: 60px;
+}
+
+#buttonGroup1 {
+    text-align: center;
+}
+
+#buttonGroup2 {
+    text-align: center;
+}
+
+#chatArea {
+    max-width: 100%;
+    overflow: auto;
+    resize: none;
+    max-height: 75px;
+}
+
+#player1name {
+    text-transform: uppercase;
+}
+
+#player2name {
+    text-transform: uppercase;
+}

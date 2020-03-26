@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Rock!Paper!Scissors!</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <!-- jquery -->
+  <script src="https://code.jquery.com/jquery-3.4.1.js" integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script>
+  <!-- fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Barrio|Erica+One|Miltonian+Tattoo&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lalezar|Passion+One|Spicy+Rice&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/bb6539ba94.js" crossorigin="anonymous"></script>
+  <!-- styles css -->
+  <!-- <link rel="stylesheet" type="text/css" href="assets/css/reset.css" /> -->
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+
+  <!-- firebase references -->
+  <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/6.0.4/firebase-database.js"></script>
+
+</head>
+
+<body>
+  <!-- Modal -->
+  <div id="openingModal" class="modal fade" data-backdrop="static" tabindex="-1" role="dialog"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="container-fluid">
+            <div class="row">
+              <div class="col-lg-1"></div>
+              <div class="col-lg-10">
+                <h3 id="enterName">Enter Your Name</h3>
+                <form>
+                  <div class="form">
+                    <label for="startGame" class="sr-only">Enter Your Name To Play</label>
+                    <input type="name" class="form-control" id="inputName" />
+                  </div>
+                  <br>
+                  <button type="submit" class="btn btn-primary mb-2" id="start-game">Start!</button>
+                </form>
+              </div>
+              <div class="col-lg-1"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="container-fluid" id="title-head">
+    <header class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-md-8">
+        <h1>ROCK! PAPER! SCISSORS!</h1>
+      </div>
+      <div class="col-sm-2"></div>
+    </header>
+  </div>
+  <!-- GAMEPLAY AREA--->
+  <div class="wrapper" id="gameplayArea">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5">
+          <h3 id="player1name">Player 1</h3>
+        </div>
+        <div class="col-md-2">
+          <h1 id="vstag">VS</h1>
+        </div>
+        <div class="col-md-5">
+          <h3 id="player2name">Player 2</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- chat section -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-8">
+          <div class="card">
+            <div class="card-header" id="chat-header">Chat</div>
+            <div data-spy="scroll" class="card-body" id="chatArea" rows="3" cols="100">
+            </div>
+          </div>
+        </div>
+        <div class="col-md-2"></div>
+      </div>
+    </div>
+
+    <br>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <!-- player 1 card  -->
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header" id="player1Header">
+              Player 1
+            </div>
+            <br>
+            <div class="card-body" id="playercardBody">
+              <div class="mb-0 float-center" role="group" aria-label="buttonGroup" id="button1Group">
+                <button data-choice="rock" type="button" class="btn btn-secondary select"><i
+                    class="fas fa-guitar"></i></button>
+                <button data-choice="paper" type="button" class="btn btn-secondary select"><i
+                    class="fas fa-paper-plane"></i></button>
+                <button data-choice="scissors" type="button" class="btn btn-secondary select"><i
+                    class="fas fa-cut"></i></button>
+              </div>
+              <br>
+              <div class="player1stats">
+                <h6 id="player1winTotal" class="mb-0 float-left">Wins: 0</h6>
+                <h6 id="player1tieTotal" class="mb-0 float-center">Ties: 0</h6>
+                <h6 id="player1lossesTotal" class="mb-0 float-right">Losses: 0</h6>
+                
+              </div>
+              <br>
+              <h5 id="round-update-1">Waiting For Your Opponent</h5>
+              <form>
+                <label for="player"></label>
+                <input type="message" class="form-control" placeholder="Say Something and Press Enter"
+                  id="inputMessage1" autocomplete="false">
+                <br>
+                <button type="enter" class="btn-secondary" id="enterMessage1">Enter</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- player 2 card -->
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="card-header" id="player1Header">
+              Player 2
+            </div>
+            <br>
+            <div class="card-body" id="playercardBody">
+              <div class="mb-0 float-center" role="group" aria-label="buttonGroup" id="button2Group">
+                <button data-choice="rock" type="button" class="btn btn-secondary select"><i
+                    class="fas fa-guitar"></i></button>
+                <button data-choice="paper" type="button" class="btn btn-secondary select"><i
+                    class="fas fa-paper-plane"></i></button>
+                <button data-choice="scissors" type="button" class="btn btn-secondary select"><i
+                    class="fas fa-cut"></i></button>
+              </div>
+              <br>
+              <div class="player2stats">
+                <h6 id="player2wins" class="mb-0 float-left">Wins: 0</h6>
+                <h6 id="player2losses" class="mb-0 float-right">Losses: 0</h6>
+              </div>
+              <br>
+              <h5 id="round-update-2">Waiting For Your Opponent</h5>
+              <form>
+                <label for="player"></label>
+                <input type="message" class="form-control" placeholder="Say Something and Press Enter"
+                  id="inputMessage2">
+                <br>
+                <button type="enter" class="btn-secondary" id="enterMessage2">Enter</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-2"></div>
+  </div>
+  <!-- < !--jQuery first, then Popper.js, then Bootstrap JS -->
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="assets/javascript/app.js"></script>
+  </script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous">
+  </script>
+</body>
+
+</html>
