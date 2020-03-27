@@ -72,10 +72,10 @@
         name1 = name;
         player1Logged = true;
         //player name 1 to html 
-        $("#player1name").html(name);
+        $("#player1name").html(name1);
         //push to firebas
         database.ref().push({
-          name1: name,
+          player1Name: name1,
           dateAdded: firebase.database.ServerValue.TIMESTAMP
         });
       } else {
@@ -84,7 +84,7 @@
         //player name 2 to html
         $("#player2name").html(name);
         database.ref().push({
-          name2: name,
+          player2Name: name,
           dateAdded: firebase.database.ServerValue.TIMESTAMP
         });
       }
@@ -123,7 +123,7 @@
     })
 
     //chat display and build chat
-    database.ref("/messages/").on("child_added", function (snapshot) {
+    database.ref("/messages").on("child_added", function (snapshot) {
       //test it!
       console.log(snapshot.val());
       //build message
@@ -132,16 +132,18 @@
 
     //read rock,paper,scissors button clicks
     //variable player1select holds player 1 choice btwn rock,paper,scissors
-    $(".select").on("click", function (event) {
+    $(".select").on("click", function (event) { 
       var player1select = $(this).attr("data-choice");
       event.preventDefault();
       console.log(player1select);
      //send to firebase 
+    
       database.ref("/playerStatus").push( {
-        player1select : player1select,
+        playerChoice : player1select,
         playerName : name1,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
       })
+     
       //send to update display
       database.ref("/playerStatus").on("child_added", function(snapshot) {
         console.log(snapshot.val());
@@ -154,20 +156,20 @@
       }
     })
 
-    ///firebase watch
-    database.ref().on("value", function (snapshot) {
-        console.log(snapshot.val());
-        // updata variables with database
-    let data = snapshot.val() || {};
-    name1 = data.name1;
-    name2 = data.name2;
-    player1select = data.player1select;
-    player2select = data.player2select;
+    // ///firebase watch
+    // database.ref().on("value", function (snapshot) {
+    //     console.log(snapshot.val());
+    //     // updata variables with database
+    // let data = snapshot.val() || {};
+    // name1 = data.name1;
+    // name2 = data.name2;
+    // player1select = data.player1select;
+    // player2select = data.player2select;
+
+    // //update in HTML
+    // $("#player1name").html(data.name1);
+    // $("#player2name").html(data.name2);
     
-    //update in HTML
-    $("#player1name").html(data.name1);
-    $("#player2name").html(data.name2);
-    })
 
 
 
@@ -265,7 +267,7 @@ $("#start-game").on("click", function (event) {
     $("#inputMessage2").val("");
     console.log(message2);
 
-    database.ref("/messages/").push({
+    database.ref("/messages").push({
       message: message2,
       playerName: name2,
       dateAdded: firebase.database.ServerValue.TIMESTAMP
@@ -279,13 +281,13 @@ $("#start-game").on("click", function (event) {
     event.preventDefault();
     console.log(player1select);
    //send to firebase 
-    database.ref("/playerStatus/").push( {
+    database.ref("/playerStatus").push( {
       player2select : player2select,
       playerName : name2,
       dateAdded: firebase.database.ServerValue.TIMESTAMP
     })
     //send to update display
-    database.ref("/playerStatus/").on("child_added", function(snapshot) {
+    database.ref("/playerStatus").on("child_added", function(snapshot) {
       console.log(snapshot.val());
     $("#round-update-2").html("You have chosen " + player2select + " !")
     });
