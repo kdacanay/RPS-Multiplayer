@@ -150,20 +150,19 @@
 var connectionsRef = database.ref("/connections");
 //boolean
 var connectedRef = database.ref(".info/connected");
-connectedRef.on("value", function(snap) {
+connectedRef.on("value", function(user) {
   // If they are connected..
-  if (snap.val()) {
+  if (user.val()) {
     // Add user to the connections list.
     var con = connectionsRef.push(true);
     // Remove user
     con.onDisconnect().remove();
   }
-
 });
-connectionsRef.on("value", function(snap) {
-  // Display the viewer count in the html.
-  $("#connected-viewers").text(snap.numChildren());
-});
+// connectionsRef.on("value", function(user) {
+//   // Display the viewer count in the html.
+//   $("#connected-viewers").text(user.numChildren());
+// });
 
 
     // /------------firebase watch
@@ -193,7 +192,7 @@ connectionsRef.on("value", function(snap) {
     
     if (player1select === "rock" || player1select === "scissors" || player1select === "paper") {
         $("#button1Group").addClass("invisible");
-        $("#button1Group").html("<p> Waiting for your opponent to select</p>");
+        $("#round-update-1").html("Waiting for your opponent to select");
     } else {
         roundUpdate();
     }
