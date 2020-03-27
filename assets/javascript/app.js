@@ -74,17 +74,17 @@
         //player name 1 to html 
         $("#player1name").html(name1);
         //push to firebas
-        database.ref().push({
-          player1Name: name1,
+        database.ref("/gameStatus").set({
+          playerName: name1,
           dateAdded: firebase.database.ServerValue.TIMESTAMP
         });
       } else {
         name2 = name;
         player1Logged = false;
         //player name 2 to html
-        $("#player2name").html(name);
-        database.ref().push({
-          player2Name: name,
+        $("#player2name").html(name2);
+        database.ref("/gameStatus").set({
+          playerName: name2,
           dateAdded: firebase.database.ServerValue.TIMESTAMP
         });
       }
@@ -97,7 +97,6 @@
          $("#round-update-1").html("Make a Selection!");
      }
     })
-
 
     //player 1 enter message
     $("#enterMessage1").on("click", function (event) {
@@ -115,7 +114,7 @@
       $("#inputMessage1").val("");
       console.log(message1);
 
-      database.ref("/messages/").push({
+      database.ref("/messages").push({
         message: message1,
         playerName: name1,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
@@ -124,8 +123,6 @@
 
     //chat display and build chat
     database.ref("/messages").on("child_added", function (snapshot) {
-      //test it!
-      console.log(snapshot.val());
       //build message
       $("#chatArea").append("<p>" + snapshot.val().playerName + ": " + snapshot.val().message + "</p>")
     });
@@ -138,95 +135,125 @@
       console.log(player1select);
      //send to firebase 
     
-      database.ref("/playerStatus").push( {
+      database.ref("/gameStatus").set( {
         playerChoice : player1select,
         playerName : name1,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
-      })
-     
-      //send to update display
-      database.ref("/playerStatus").on("child_added", function(snapshot) {
-        console.log(snapshot.val());
-      $("#round-update-1").html("You have chosen " + player1select + " !")
       });
-      if (player2select = null) {
-        $("#round-update-1").html("Waiting for" + name2 + "to choose")
-      } else {
-        roundUpdate();
-      }
-    })
-
-    // ///firebase watch
-    // database.ref().on("value", function (snapshot) {
+     
+    //   //send to update display
+    //   database.ref("/gameStatus").on("child_added", function(snapshot) {
     //     console.log(snapshot.val());
-    //     // updata variables with database
+      
+    })
+//-----------CONNECTIONS------------------
+var connectionsRef = database.ref("/connections");
+//boolean
+var connectedRef = database.ref(".info/connected");
+connectedRef.on("value", function(snap) {
+  // If they are connected..
+  if (snap.val()) {
+    // Add user to the connections list.
+    var con = connectionsRef.push(true);
+    // Remove user
+    con.onDisconnect().remove();
+  }
+
+});
+connectionsRef.on("value", function(snap) {
+  // Display the viewer count in the html.
+  $("#connected-viewers").text(snap.numChildren());
+});
+
+
+    // /------------firebase watch
+    database.ref("/gameStatus").on("value", function (snapshot) {
+        // updata variables with database
+        if (snapshot.child("playerName").exists() && snapshot.child("playerChoice").exists()) {
+            name1 = snapshot.val().playerName;
+            player1select = snapshot.val().playerChoice;
+
+            console.log(snapshot.val().playerName);
+            console.log(snapshot.val().playerChoice);
+        }
+
+
+
+
+
     // let data = snapshot.val() || {};
     // name1 = data.name1;
     // name2 = data.name2;
     // player1select = data.player1select;
     // player2select = data.player2select;
 
-    // //update in HTML
+    //update in HTML
     // $("#player1name").html(data.name1);
     // $("#player2name").html(data.name2);
     
-
-
-
-
-
-
-
+    if (player1select === "rock" || player1select === "scissors" || player1select === "paper") {
+        $("#button1Group").addClass("invisible");
+        $("#button1Group").html("<p> Waiting for your opponent to select</p>");
+    } else {
+        roundUpdate();
+    }
+    })
 
 
     function roundUpdate() {
-     if  ((player1select === "rock" && player2select === "rock") ||
-         (player1select === "paper" && player2select === "paper") ||
-         (player1select === "scissors" && player2select === "scissors"))
-      {  //players tie
-      $("#round-update-1").html("There was a draw!");
-      $("#round-update-2").html("There was a draw!");
-      } else if //player 1 wins
-      ((player1select === "rock" && player2select === "scissors") ||
-      (player1select === "paper" && player2select === "rock") ||
-      (player1select === "scissors" && player2select === "paper"))
-      {
-        $("#round-update-1").html("You won!");
-        $("#round-update-2").html("You lose!");
-        player1wins ++;
-        player2losses ++;
-      } else if //player 2 wins
-      ((player1select === "rock" && player2select === "paper") ||
-      (player1select === "paper" && player2select === "scissors") ||
-      (player1select === "scissors" && player2select === "rock"))
-      {
-        $("#round-update-1").html("You lose!");
-        $("#round-update-2").html("You won!");
-        player1losses ++;
-        player2wins ++;
-      }
-  }
+        if  ((player1select === "rock" && player2select === "rock") ||
+            (player1select === "paper" && player2select === "paper") ||
+            (player1select === "scissors" && player2select === "scissors"))
+         {  //players tie
+         $("#round-update-1").html("There was a draw!");
+         $("#round-update-2").html("There was a draw!");
+         } else if //player 1 wins
+         ((player1select === "rock" && player2select === "scissors") ||
+         (player1select === "paper" && player2select === "rock") ||
+         (player1select === "scissors" && player2select === "paper"))
+         {
+           $("#round-update-1").html("You won!");
+           $("#round-update-2").html("You lose!");
+           player1wins ++;
+           player2losses ++;
+         } else if //player 2 wins
+         ((player1select === "rock" && player2select === "paper") ||
+         (player1select === "paper" && player2select === "scissors") ||
+         (player1select === "scissors" && player2select === "rock"))
+         {
+           $("#round-update-1").html("You lose!");
+           $("#round-update-2").html("You won!");
+           player1losses ++;
+           player2wins ++;
+         }
+        }
 
-//------------PLAYER 2-------------------------------------
-$("#start-game").on("click", function (event) {
-    event.preventDefault();
-    $("#chatArea").show().empty();
 
-    //prevents player from pressing submit without entering name
-    var play;
-    play = document.getElementById("inputName").value;
-    if (play == "") {
-      alert("Please Enter a Name");
-      return false;
-    }
 
-    // hide the modal!
-    $("#openingModal").modal('hide');
-    //empty that chatArea!
-    $("#chatArea").empty();
-    //get input
-    var name = $("#inputName").val().trim();
-    console.log(name);
+
+
+
+
+// //------------PLAYER 2-------------------------------------
+// $("#start-game").on("click", function (event) {
+//     event.preventDefault();
+//     $("#chatArea").show().empty();
+
+//     //prevents player from pressing submit without entering name
+//     var play;
+//     play = document.getElementById("inputName").value;
+//     if (play == "") {
+//       alert("Please Enter a Name");
+//       return false;
+//     }
+
+//     // hide the modal!
+//     $("#openingModal").modal('hide');
+//     //empty that chatArea!
+//     $("#chatArea").empty();
+//     //get input
+//     var name = $("#inputName").val().trim();
+//     console.log(name);
 
     //
     // if (!name1) {
@@ -250,51 +277,51 @@ $("#start-game").on("click", function (event) {
     //     dateAdded: firebase.database.ServerValue.TIMESTAMP
     //   })
     // }
-  })
+//   })
   //player 2 enter message
-  $("#enterMessage2").on("click", function (event) {
-    //press enter to...uh enter...
-    if (event.keyCode === 13) {
-      $("#enterMessage2").click();
-    }
-    //this automatically scrolls the chat display to the bottom every time a message is sent
-    $('#chatArea').animate({
-      scrollTop: $('#chatArea')[0].scrollHeight
-    }, "slow");
-    event.preventDefault();
-    //message 2 input
-    var message2 = $("#inputMessage2").val();
-    $("#inputMessage2").val("");
-    console.log(message2);
+//   $("#enterMessage2").on("click", function (event) {
+//     //press enter to...uh enter...
+//     if (event.keyCode === 13) {
+//       $("#enterMessage2").click();
+//     }
+//     //this automatically scrolls the chat display to the bottom every time a message is sent
+//     $('#chatArea').animate({
+//       scrollTop: $('#chatArea')[0].scrollHeight
+//     }, "slow");
+//     event.preventDefault();
+//     //message 2 input
+//     var message2 = $("#inputMessage2").val();
+//     $("#inputMessage2").val("");
+//     console.log(message2);
 
-    database.ref("/messages").push({
-      message: message2,
-      playerName: name2,
-      dateAdded: firebase.database.ServerValue.TIMESTAMP
-    });
-  })
+//     database.ref("/messages").push({
+//       message: message2,
+//       playerName: name2,
+//       dateAdded: firebase.database.ServerValue.TIMESTAMP
+//     });
+//   })
 
   //read rock,paper,scissors button clicks
   //variable player1select holds player 1 choice btwn rock,paper,scissors
-  $(".select").on("click", function (event) {
-    var player2select = $(this).attr("data-choice");
-    event.preventDefault();
-    console.log(player1select);
-   //send to firebase 
-    database.ref("/playerStatus").push( {
-      player2select : player2select,
-      playerName : name2,
-      dateAdded: firebase.database.ServerValue.TIMESTAMP
-    })
-    //send to update display
-    database.ref("/playerStatus").on("child_added", function(snapshot) {
-      console.log(snapshot.val());
-    $("#round-update-2").html("You have chosen " + player2select + " !")
-    });
-    if (player1select = null) {
-      $("#round-update-2").html("Waiting for" + name1 + "to choose")
-    } else {
-      roundUpdate();
-    }
-  })
-  })
+//   $(".select").on("click", function (event) {
+//     var player2select = $(this).attr("data-choice");
+//     event.preventDefault();
+//     console.log(player1select);
+//    //send to firebase 
+//     database.ref("/playerStatus").push( {
+//       player2select : player2select,
+//       playerName : name2,
+//       dateAdded: firebase.database.ServerValue.TIMESTAMP
+//     })
+//     //send to update display
+//     database.ref("/playerStatus").on("child_added", function(snapshot) {
+//       console.log(snapshot.val());
+//     $("#round-update-2").html("You have chosen " + player2select + " !")
+//     });
+//     if (player1select = null) {
+//       $("#round-update-2").html("Waiting for" + name1 + "to choose")
+//     } else {
+//       roundUpdate();
+//     }
+//   })
+    }) 
