@@ -73,7 +73,7 @@
         player1Logged = true;
         //player name 1 to html 
         $("#player1name").html(name1);
-        //push to firebas
+        //push to firebase
         database.ref("/gameStatus").push({
           playerName: name1,
           dateAdded: firebase.database.ServerValue.TIMESTAMP
@@ -84,13 +84,14 @@
         name2 = name;
         player1Logged = false;
         //player name 2 to html
-        $("#player2name").html(name);
-        database.ref("/gameStatus").set({
-          playerName: name,
+        $("#player2name").html(name2);
+        database.ref("/gameStatus").push({
+          playerName: name2,
           dateAdded: firebase.database.ServerValue.TIMESTAMP
         });
         database.ref("/gameStatus").onDisconnect().remove();
-      }
+      };
+
      if (player1Logged === true) {
          $("#button1Group").removeClass("invisible");
          $("#round-update-2").html("Player 2 Not Logged in")
@@ -116,7 +117,7 @@
       var message1 = $("#inputMessage1").val();
       $("#inputMessage1").val("");
       console.log(message1);
-
+      //push to database
       database.ref("/messages").push({
         message: message1,
         playerName: name1,
@@ -137,8 +138,8 @@
       event.preventDefault();
       console.log(player1select);
      //send to firebase 
-    
-      database.ref("/gameStatus").set( {
+      //push to database
+      database.ref("/gameStatus").push( {
         playerChoice : player1select,
         playerName : name1,
         dateAdded: firebase.database.ServerValue.TIMESTAMP
@@ -169,25 +170,26 @@ connectedRef.on("value", function(user) {
 
 
     // /------------firebase watch
-    database.ref("/gameStatus").on("value", function (snapshot) {
+    // database.ref("/gameStatus").on("value", function(snapshot) {}
+    database.ref("/gameStatus").on("child_added", function (snapshot) {
         // updata variables with database
-        if (snapshot.child("playerName").exists() && snapshot.child("playerChoice").exists()) {
-            name = snapshot.val().playerName;
-            player1select = snapshot.val().playerChoice;
+        // if (snapshot.child("playerName").exists() && snapshot.child("playerChoice").exists()) {
+        //     name = snapshot.val().playerName;
+        //     player1select = snapshot.val().playerChoice;
 
-            console.log(snapshot.val().playerName);
-            console.log(snapshot.val().playerChoice);
-        }
-    
+        //     console.log(snapshot.val().playerName);
+        //     console.log(snapshot.val().playerChoice);
+    var updateActivity = snapshot.val();
     if (player1select === "rock" || player1select === "scissors" || player1select === "paper") {
+     
         $("#button1Group").addClass("invisible");
         $("#round-update-1").html("Waiting for your opponent to select");
-    } else {
-        roundUpdate();
     }
-    if (player2select === "rock" || player2select === "scissors" || player2select === "paper") {
+     if (player2select === "rock" || player2select === "scissors" || player2select === "paper") {
+       console.log(updateActivity.player2select);
         $("#button2Group").addClass("invisible");
         $("#round-update-2").html("Waiting for your opponent to select");
+    
     } else {
         roundUpdate();
     }
@@ -274,51 +276,51 @@ connectedRef.on("value", function(user) {
 
 
 //   player 2 enter message
-  $("#enterMessage2").on("click", function (event) {
-    //press enter to...uh enter...
-    if (event.keyCode === 13) {
-      $("#enterMessage2").click();
-    }
-       //this automatically scrolls the chat display to the bottom every time a message is sent
-       $('#chatArea').animate({
-        scrollTop: $('#chatArea')[0].scrollHeight
-      }, "slow");
-    event.preventDefault();
-    //message 2 input
-    var message2 = $("#inputMessage2").val();
-    $("#inputMessage2").val("");
-    console.log(message2);
+//   $("#enterMessage2").on("click", function (event) {
+//     //press enter to...uh enter...
+//     if (event.keyCode === 13) {
+//       $("#enterMessage2").click();
+//     }
+//        //this automatically scrolls the chat display to the bottom every time a message is sent
+//        $('#chatArea').animate({
+//         scrollTop: $('#chatArea')[0].scrollHeight
+//       }, "slow");
+//     event.preventDefault();
+//     //message 2 input
+//     var message2 = $("#inputMessage2").val();
+//     $("#inputMessage2").val("");
+//     console.log(message2);
 
-    database.ref("/messages").push({
-      message: message2,
-      playerName: name2,
-      dateAdded: firebase.database.ServerValue.TIMESTAMP
-    });
-  })
-
-  //read rock,paper,scissors button clicks
-  //variable player1select holds player 1 choice btwn rock,paper,scissors
-  $(".select").on("click", function (event) {
-    var player2select = $(this).attr("data-choice");
-    event.preventDefault();
-    console.log(player2select);
-   //send to firebase 
-    database.ref("/gameStatus").push( {
-      playerChoice : player2select,
-      playerName : name,
-      dateAdded: firebase.database.ServerValue.TIMESTAMP
-    })
-//     //send to update display
-//     database.ref("/gameStatus").on("child_added", function(snapshot) {
-//       console.log(snapshot.val());
-//     $("#round-update-2").html("You have chosen " + player2select + " !")
+//     database.ref("/messages").push({
+//       message: message2,
+//       playerName: name2,
+//       dateAdded: firebase.database.ServerValue.TIMESTAMP
 //     });
-//     if (player1select = null) {
-//       $("#round-update-2").html("Waiting for" + name1 + "to choose")
-//     } else {
-//       roundUpdate();
+//   })
+
+//   //read rock,paper,scissors button clicks
+//   //variable player1select holds player 1 choice btwn rock,paper,scissors
+//   $(".select").on("click", function (event) {
+//     var player2select = $(this).attr("data-choice");
+//     event.preventDefault();
+//     console.log(player2select);
+//    //send to firebase 
+//     database.ref("/gameStatus").push( {
+//       playerChoice : player2select,
+//       playerName : name,
+//       dateAdded: firebase.database.ServerValue.TIMESTAMP
+//     })
+// //     //send to update display
+// //     database.ref("/gameStatus").on("child_added", function(snapshot) {
+// //       console.log(snapshot.val());
+// //     $("#round-update-2").html("You have chosen " + player2select + " !")
+// //     });
+// //     if (player1select = null) {
+// //       $("#round-update-2").html("Waiting for" + name1 + "to choose")
+// //     } else {
+// //       roundUpdate();
 //     }
 //   })
     }) 
-})
+// })
 
