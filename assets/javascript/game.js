@@ -59,6 +59,12 @@
         player1 = snapshot.val().name;
         console.log(player1);
         $("#player1name").html(player1);
+        player1object = {
+            name: player1,
+            choice: "" ,
+            wins: 0,
+            losses: 0,
+        }
     })
     database.ref("/playerName").on("child_added", function(snapshot) {
     if (snapshot.child("name").exists()) {
@@ -66,6 +72,12 @@
         player2 = snapshot.val().name;
         console.log(player2);
         $("#player2name").html(player2);
+        player2object = {
+            name: player2,
+            choice: "" ,
+            wins: 0,
+            losses: 0,
+        }
         $("#button2Group").removeClass("invisible");
         $("#round-update-2").html("Make a Selection!");
         $("#round-update-1").html("Make a Selection!");
