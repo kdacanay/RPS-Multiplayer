@@ -33,8 +33,8 @@
     var player1 = null;
     var player2 = null;
     // player choices
-    // var player1select = "";
-    // var player2select = "";
+    var player1select = "";
+    var player2select = "";
     
     //create a variable to reference the database
     var database = firebase.database();
@@ -108,6 +108,7 @@
          }
     });
 
+        //-------------listener for "/messages/"---------------
         //chat display and build chat
         database.ref("/messages/").on("child_added", function (snapshot) {
         //build message
@@ -121,14 +122,17 @@
                 playerTurn = 1;
                 if (player1 && player2) {
                     $("#player1Header").addClass("cardTurn");
+                    $("#player2Header").removeClass("cardTurn");
                     $("#round-update-1").html("It's Your Turn!");
                     $("#choose-button-1").html("Choose Wisely...");
                     $("#round-update-2").html("Not Your Turn!");
                     $("#choose-button-2").html("Wait For It...");
-                } else if (snapshot.val() === 2) {
+                } 
+                else if (snapshot.val() === 2) {
                 console.log("turn2");
                 playerTurn = 2;
                 if (player1 && player2) {
+                    $("#player1Header").removeClass("cardTurn");
                     $("#player2Header").addClass("cardTurn");
                     $("#round-update-2").html("It's Your Turn!");
                     $("#choose-button-2").html("Choose Wisely...");
@@ -211,6 +215,39 @@
           database.ref("/messages/").push({
               message : message,
               dateAdded: firebase.database.ServerValue.TIMESTAMP})
-
  })
+    //-------------selecting RPS------------------------
+    //player1---------------------
+    $(".select").on("click", function (event) { 
+        event.preventDefault();
+        //both players must be in to make selections
+        if (player1 && player2 && (yourName === player1.name) && (playerTurn === 1)) {
+            var select = $(this).attr("data-choice");
+            player1select = select;
+        $("#button1Group").hide();
+        //push to database
+        database.ref().child("/players/player1/choice").set(select);
+        playerTurn = 2;
+        database.ref().child("/playerTurn/").set(2);
+        }
+    //player2------------------------------
+        else {//(player1 && player2 && (yourName === player2.name) && (playerTurn === 2)) 
+            var select = $(this).attr("data-choice");
+            player2select = select;
+        $("#button2Group").hide();
+        //push to database
+        database.ref().child("/players/player2/choice").set(select);
+        endRound();
+        }
+});
+
+    function endRound() {
+        if  ((player1.choice === "rock" && player2.choice === "rock") ||
+        (player1.choice === "paper" && player2.choice === "paper") ||
+        (player1.choice === "scissors" && player2.choice === "scissors"))
+     { //players tie
+     $("#round-update-1").html("There was a draw!");
+     $("#round-update-2").html("There was a draw!");
+    }
+    }
 })
