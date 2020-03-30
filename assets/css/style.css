@@ -77,3 +77,7 @@ i {
 #player2name {
     text-transform: uppercase;
 }
+
+.cardTurn {
+    background-color: cadetblue;
+}
