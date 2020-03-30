@@ -61,10 +61,10 @@
             player1name = "";
             //update display
         //    $("#round-update-1").html("Waiting for Player 1"); 
-           $("#player1Header").removeClass("cardTurn"); 
-           $("#player2Header").removeClass("cardTurn");  
-           $("#player1wins").html("Wins: 0");
-           $("#player1losses").html("Losses: 0");
+        //    $("#player1Header").removeClass("cardTurn"); 
+        //    $("#player2Header").removeClass("cardTurn");  
+        //    $("#player1wins").html("Wins: 0");
+        //    $("#player1losses").html("Losses: 0");
         }
         if (snapshot.child("player2").exists()) {
             console.log("Player 2 exists");
@@ -79,16 +79,16 @@
              player2name = "";
             //  //update display
             // $("#round-update-2").html("Waiting for Player 2"); 
-            $("#player1Header").removeClass("cardTurn"); 
-            $("#player2Header").removeClass("cardTurn");  
-            $("#player2wins").html("Wins: 0");
-            $("#player2losses").html("Losses: 0");   
+            // $("#player1Header").removeClass("cardTurn"); 
+            // $("#player2Header").removeClass("cardTurn");  
+            // $("#player2wins").html("Wins: 0");
+            // $("#player2losses").html("Losses: 0");   
          }
          //both players logged in, assign turn
          if (player1 && player2) {
             //  //player1's turn by default
             // playerTurn = 1;
-            $("#player1Header").addClass("cardTurn");
+            // $("#player1Header").addClass("cardTurn");
             $("#round-update-1").html("It's Your Turn!");
             $("#choose-button-1").html("Choose Wisely...");
             $("#round-update-2").html("Not Your Turn!");
@@ -96,10 +96,12 @@
          }
          //disconnect
          if (!player1 && !player2) {
-            $("#player1Header").removeClass("cardTurn"); 
-            $("#player2Header").removeClass("cardTurn");  
+            // $("#player1Header").removeClass("cardTurn"); 
+            // $("#player2Header").removeClass("cardTurn");  
             $("#player2wins").html("Wins: 0");
             $("#player2losses").html("Losses: 0");
+            $("#player1wins").html("Wins: 0");
+            $("#player1losses").html("Losses: 0");
             $("#chatArea").empty();
             database.ref("/messages/").remove();
             database.ref("/playerTurn/").remove();
@@ -121,8 +123,8 @@
                 console.log("turn1");
                 playerTurn = 1;
                 if (player1 && player2) {
-                    $("#player1Header").addClass("cardTurn");
-                    $("#player2Header").removeClass("cardTurn");
+                    // $("#player1Header").addClass("cardTurn");
+                    // $("#player2Header").removeClass("cardTurn");
                     $("#round-update-1").html("It's Your Turn!");
                     $("#choose-button-1").html("Choose Wisely...");
                     $("#round-update-2").html("Not Your Turn!");
@@ -132,8 +134,8 @@
                 console.log("turn2");
                 playerTurn = 2;
                 if (player1 && player2) {
-                    $("#player1Header").removeClass("cardTurn");
-                    $("#player2Header").addClass("cardTurn");
+                    // $("#player1Header").removeClass("cardTurn");
+                    // $("#player2Header").addClass("cardTurn");
                     $("#round-update-2").html("It's Your Turn!");
                     $("#choose-button-2").html("Choose Wisely...");
                     $("#round-update-1").html("Not Your Turn!");
@@ -190,7 +192,7 @@
              //add player2 to database
              database.ref().child("/players/player2").set(player2);
              //set turn to player 2 in database
-                 database.ref().child("/playerTurn/").set(2);
+                //  database.ref().child("/playerTurn/").set(2);
              // upon disconnect
                  database.ref("/players/player2").onDisconnect().remove();
         }
@@ -246,8 +248,58 @@
         (player1.choice === "paper" && player2.choice === "paper") ||
         (player1.choice === "scissors" && player2.choice === "scissors"))
      { //players tie
-     $("#round-update-1").html("There was a draw!");
-     $("#round-update-2").html("There was a draw!");
+    //  $("#round-update-1").html("There was a draw!");
+    //  $("#round-update-2").html("There was a draw!");
+     //push to database
+     database.ref().child("/endRound/").set("Tie!");
+    } else if //player 1 wins
+    ((player1.choice === "rock" && player2.choice === "scissors") ||
+    (player1.choice === "paper" && player2.choice === "rock") ||
+    (player1.choice === "scissors" && player2.choice === "paper"))
+    {
+    //   $("#round-update-1").html("You won!");
+    //   $("#round-update-2").html("You lose!");
+        //   player1wins ++;
+        //   player2losses ++;
+      database.ref().child("/endRound/").set("Player1 wins!")
+      database.ref().child("/players/player1/wins").set(player1.wins +1);
+      database.ref().child("/players/player2/losses").set(player2.losses +1);
+      $("#player1wins").html("Wins: " + player1.wins);
+      $("#player2losses").html("Loses: " + player2.losses);
+    } else if //player 2 wins
+    ((player1.choice === "rock" && player2.choice === "paper") ||
+    (player1.choice === "paper" && player2.choice === "scissors") ||
+    (player1.choice === "scissors" && player2.choice === "rock"))
+    {
+    //   $("#round-update-1").html("You lose!");
+    //   $("#round-update-2").html("You won!");
+    //   player1losses ++;
+    //   player2wins ++;
+    database.ref().child("/endRound/").set("Player2 wins!")
+    database.ref().child("/players/player2/wins").set(player2.wins +1);
+    database.ref().child("/players/player1/losses").set(player1.losses +1);
+    $("#player2wins").html("Wins: " + player2.wins);
+    $("#player1losses").html("Loses: " + player1.losses);
     }
+    setTimeout(function() {
+    //reset turns
+    playerTurn = 1;
+    database.ref().child("/playerTurn/").set(1);
+    database.ref("/endRound/").on("value", function(snapshot) {
+        // $("#button1Group").removeClass("invisible");
+        // $("#button2Group").removeClass("invisible");
+        $("#round-update-1").html(snapshot.val());
+        $("#round-update-2").html(snapshot.val());
+    });
+    }, 2000); 
+    restartRound();  
+    } 
+
+
+    function restartRound() {
+        $("#button1Group").show();
+        $("#button2Group").show();
     }
+    
 })
+ 
