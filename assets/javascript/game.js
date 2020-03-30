@@ -2,7 +2,6 @@
  $(document).ready(function () {
     //open the modal!
     $("#openingModal").modal('show');
-    $("#chatArea").hide();
     //initialize firebase
     var config = {
       apiKey: "AIzaSyBUmcws3MT-Y6iHtku4CyaNezOx-e9GfTs",
@@ -108,10 +107,11 @@
             database.ref("/players/").remove();
          }
     });
+
         //chat display and build chat
         database.ref("/messages/").on("child_added", function (snapshot) {
         //build message
-        $("#chatArea").append("<p>" + snapshot.val().playerName + ": " + snapshot.val().message + "</p>")
+        $("#chatArea").append("<p>" + snapshot.val().message + "</p>")
       });
 
         //listener for turn changes
@@ -155,7 +155,7 @@
     // hide the modal!
     $("#openingModal").modal('hide');
     //empty that chatArea!
-    $("#chatArea").empty();
+    // $("#chatArea").empty();
     // -----------------------------------------------------
     // if (($("#inputName").val().trim() !== "") && !(player1 && player2) ) {
     //     //player 1
@@ -192,82 +192,25 @@
         }
     })
 
+    //------------------Chat Section---------------------------
 
+    $("#enterMessage").on("click", function(event) {
+        if (event.keyCode === 13) {
+            $("#enterMessage").click();
+          }
+          //this automatically scrolls the chat display to the bottom every time a message is sent
+          $('#chatArea').animate({
+            scrollTop: $('#chatArea')[0].scrollHeight
+          }, "slow");
+          event.preventDefault();
+            //message input
+          var message = yourName + ": " + $("#inputMessage").val();
+          $("#inputMessage").val("");
+          console.log(message);
+          //push to database
+          database.ref("/messages/").push({
+              message : message,
+              dateAdded: firebase.database.ServerValue.TIMESTAMP})
 
-
-
-    //retrieve inputs from player --- build a player
-    //Name
-    // $("#start-game").on("click", function (event) {
-    //     event.preventDefault();
-    // //-------------------------------------------------
-    // //prevents player from pressing submit without entering name
-    // var play;
-    // play = document.getElementById("inputName").value;
-    // if (play == "") {
-    //   alert("Please Enter a Name");
-    //   return false;
-    // }
-    // // hide the modal!
-    // $("#openingModal").modal('hide');
-    // //empty that chatArea!
-    // $("#chatArea").empty();
-    // // -----------------------------------------------------
-    // //get input for name
-    // var name = $("#inputName").val().trim();
-    // console.log(name);
-    // database.ref("/playerName").set({
-    //     name : name,
-    //     dateAdded: firebase.database.ServerValue.TIMESTAMP
-    // });
-    
-   
-        // var player1 = null;
-        // player1 = snapshot.val().name;
-        // console.log(player1);
-        // 
-        // player1object = {
-        //     name: player1,
-        //     choice: "" ,
-        //     wins: 0,
-        //     losses: 0,
-    // })
-    // database.ref("/playerName").on("child_added", function(snapshot) {
-    // if (snapshot.child("name").exists()) {
-    //     var player2 = null;
-    //     player2 = snapshot.val().name;
-    //     console.log(player2);
-    //     $("#player2name").html(player2);
-    //     player2object = {
-    //         name: player2,
-    //         choice: "" ,
-    //         wins: 0,
-    //         losses: 0,
-    //     }
-    //     $("#button2Group").removeClass("invisible");
-    //     $("#round-update-2").html("Make a Selection!");
-    //     $("#round-update-1").html("Make a Selection!");
-    // } else {
-    //     console.log("TESTESTESTEST");
-    //     $("#button1Group").removeClass("invisible");
-    //     $("#round-update-2").html("Player 2 Not Logged in")
-//     }
-// })
-    // if (player1 = !null) {
-    //     $("#button1Group").removeClass("invisible");
-    //     $("#round-update-2").html("Player 2 Not Logged in")
-    // } else {
-    //     $("#button2Group").removeClass("invisible");
-    //     $("#round-update-2").html("Make a Selection!");
-    //     $("#round-update-1").html("Make a Selection!");
-//     })
-// })
-    // 
-    //select
-    //read rock,paper,scissors button clicks
-    //variable player1select holds player 1 choice btwn rock,paper,scissors
-    // $(".select").on("click", function (event) { 
-    //     var player1select = $(this).attr("data-choice");
-    //     event.preventDefault();
-    //     console.log(player1select);
  })
+})

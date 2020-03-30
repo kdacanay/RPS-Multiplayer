@@ -91,7 +91,7 @@
           <div class="card">
             <div class="card-header" id="chat-header">Chat</div>
             <div data-spy="scroll" class="card-body" id="chatArea" rows="3" cols="100">
-            </div>
+          <p></p></div>
           </div>
         </div>
         <div class="col-md-2"></div>
@@ -127,13 +127,6 @@
               <br>
               <h5 id="round-update-1"></h5>
               <h5 id="choose-button-1"></h5>
-              <form class>
-                <label for="player"></label>
-                <input type="message" class="form-control" placeholder="Say Something and Press Enter"
-                  id="inputMessage1" autocomplete="false">
-                <br>
-                <button type="enter" class="btn-secondary" id="enterMessage1">Enter</button>
-              </form>
             </div>
           </div>
         </div>
@@ -161,19 +154,28 @@
               <br>
               <h5 id="round-update-2"></h5>
               <h5 id="choose-button-2"></h5>
-              <form>
-                <label for="player"></label>
-                <input type="message" class="form-control" placeholder="Say Something and Press Enter"
-                  id="inputMessage2">
-                <br>
-                <button type="enter" class="btn-secondary" id="enterMessage2">Enter</button>
-              </form>
+  
             </div>
           </div>
         </div>
       </div>
     </div>
     <div class="col-sm-2"></div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <form>
+          <label for="player"></label>
+          <input type="message" class="form-control" placeholder="Say Something and Press Enter"
+            id="inputMessage" autocomplete="false">
+          <br>
+          <button type="enter" class="btn-secondary" id="enterMessage">Enter</button>
+        </form>
+      </div>
+      <div class="col-md-2"></div>
+    </div>
   </div>
   <!-- < !--jQuery first, then Popper.js, then Bootstrap JS -->
   <!-- The core Firebase JS SDK is always required and must be listed first -->
