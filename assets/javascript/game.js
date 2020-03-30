@@ -56,11 +56,12 @@
            //update display
            $("#player1name").html(player1name);
            $("#button1Group").removeClass("invisible");
+           $("#round-update-2").html("Waiting for Player 2"); 
         } else {
             player1 = null;
             player1name = "";
             //update display
-           $("#round-update-1").html("Waiting for Player 1"); 
+        //    $("#round-update-1").html("Waiting for Player 1"); 
            $("#player1Header").removeClass("cardTurn"); 
            $("#player2Header").removeClass("cardTurn");  
            $("#player1wins").html("Wins: 0");
@@ -72,13 +73,13 @@
             player2 = snapshot.val().player2;
             player2name = player2.name;
             //update display
-            $("#player2name").html(player1name);
+            $("#player2name").html(player2name);
             $("#button2Group").removeClass("invisible");
          } else {
              player2 = null;
              player2name = "";
-             //update display
-            $("#round-update-2").html("Waiting for Player 2"); 
+            //  //update display
+            // $("#round-update-2").html("Waiting for Player 2"); 
             $("#player1Header").removeClass("cardTurn"); 
             $("#player2Header").removeClass("cardTurn");  
             $("#player2wins").html("Wins: 0");
@@ -86,12 +87,12 @@
          }
          //both players logged in, assign turn
          if (player1 && player2) {
-             //player1's turn by default
-            playerTurn = 1;
+            //  //player1's turn by default
+            // playerTurn = 1;
             $("#player1Header").addClass("cardTurn");
-            $("#round-1-update").html("It's Your Turn!");
+            $("#round-update-1").html("It's Your Turn!");
             $("#choose-button-1").html("Choose Wisely...");
-            $("#round-2-update").html("Not Your Turn!");
+            $("#round-update-2").html("Not Your Turn!");
             $("#choose-button-2").html("Wait For It...");
          }
          //disconnect
@@ -112,6 +113,7 @@
         //build message
         $("#chatArea").append("<p>" + snapshot.val().playerName + ": " + snapshot.val().message + "</p>")
       });
+
         //listener for turn changes
         database.ref("/playerTurn/").on("value", function(snapshot) {
             if (snapshot.val() === 1) {
@@ -119,18 +121,18 @@
                 playerTurn = 1;
                 if (player1 && player2) {
                     $("#player1Header").addClass("cardTurn");
-                    $("#round-1-update").html("It's Your Turn!");
+                    $("#round-update-1").html("It's Your Turn!");
                     $("#choose-button-1").html("Choose Wisely...");
-                    $("#round-2-update").html("Not Your Turn!");
+                    $("#round-update-2").html("Not Your Turn!");
                     $("#choose-button-2").html("Wait For It...");
                 } else if (snapshot.val() === 2) {
                 console.log("turn2");
                 playerTurn = 2;
                 if (player1 && player2) {
                     $("#player2Header").addClass("cardTurn");
-                    $("#round-2-update").html("It's Your Turn!");
+                    $("#round-update-2").html("It's Your Turn!");
                     $("#choose-button-2").html("Choose Wisely...");
-                    $("#round-1-update").html("Not Your Turn!");
+                    $("#round-update-1").html("Not Your Turn!");
                     $("#choose-button-1").html("Wait For It...");
                 }
                 }
@@ -182,7 +184,7 @@
                 choice: ""
             };
              //add player2 to database
-             database.ref().child("/players/player2").push(player2);
+             database.ref().child("/players/player2").set(player2);
              //set turn to player 2 in database
                  database.ref().child("/playerTurn/").set(2);
              // upon disconnect
