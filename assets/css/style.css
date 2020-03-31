@@ -78,6 +78,8 @@ i {
     text-transform: uppercase;
 }
 
-/* .cardTurn {
-    background-color: cadetblue;
-} */
+#main-update {
+    text-align: center;
+    font-family: 'Barrio', cursive;
+    font-size: 25px;
+}
