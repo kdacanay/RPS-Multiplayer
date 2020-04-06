@@ -83,3 +83,8 @@ i {
     font-family: 'Barrio', cursive;
     font-size: 25px;
 }
+
+.player1stats {
+    float: center;
+    text-align: center;
+}
