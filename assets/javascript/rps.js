@@ -55,7 +55,7 @@ $(document).ready(function () {
                         //loss
                         //tie
 // chat: database.ref("/chat/")
-// player turn: database.ref("/player turn/")
+// player turn: database.ref("/playerTurn/")
 // end of round: database.ref("/roundOutcome/")
 
 //--------------create variable to reference firebase-----------------------
@@ -77,8 +77,10 @@ var p1Choice = "";
 var p2Choice = "";
 
 //-------------modal opens at document load-----------------------
+
 $("#openingModal").modal("show");
 
+//---------------database listener for player names-----------------
 // player listener
 database.ref("/players/").on("value", function(snapshot) {
     
@@ -139,11 +141,124 @@ database.ref("/players/").on("value", function(snapshot) {
         $("#chatArea").empty();
         database.ref("/players/").remove();
         database.ref("/chat/").remove();
-        database.ref("/player turn/").remove();
+        database.ref("/playerTurn/").remove();
         database.ref("/roundOutcome/").remove();
     }
-}   
+})
 
+//-------------------database listener for player turns--------------------
+
+database.ref("/playerTurn/").on("value", function(snapshot) {
+    //default is playerTurn = 1;
+    if(snapshot.val() === 1) {
+        console.log("turn1");
+        playerTurn = 1;
+        //both players must be logged in
+    } if (p1 && p2) {
+        $("#notify1").html("Choose Wisely");
+        $("#notify2").html("Please Wait");
+    
+    } else if (snapshot.val() === 2) {
+    //same for player 2
+        console.log("turn2");
+        playerTurn = 2;
+    } if (p1 && p2) {
+        $("#notify2").html("Choose Wisely");
+        $("#notify1").html("Please Wait")
+    }
+})
+
+//-------------player log in-----------------------------------------
+
+//player enters name
+
+$("#start-game").on("click", function(event) {
+    event.preventDefault();
+
+    //-------prevents player from submitting without entering name------------
+    var play;
+    play = document.getElementById("inputName").value;
+    if (play === "") {
+        alert("Please Enter a Name");
+        return false;
+    }
+    //--------hides modal after player entry---------------
+    $("#inputName").text("");
+    $("#openingModal").modal("hide");
+
+    if (p1 === null) {
+        console.log("player 1 added");
+
+        userName = $("#inputName").val().trim();
+        //build player object for database
+        p1 = {
+            name: userName,
+            wins: 0,
+            losses: 0,
+            ties: 0,
+            choice: "",
+        };
+       //send object to database
+       database.ref().child("/players/p1").set(p1);
+       //set turn in datbase to player 1
+       database.ref().child("/playerTurn").set(1);
+       //upon player 1 disconnect
+       database.ref("/players1/p1").onDisconnect().remove();
+
+    }  
+        //if player 1 exists and player 2 is null, player 2 then added
+     else if ((p1 != null) && (p2 === null)) {
+         console.log("player 2 added");
+
+         userName = $("#inputName").val().trim();
+         //build player object
+         p2 = {
+             name: userName,
+             wins: 0,
+             losses: 0,
+             ties: 0,
+             choice: "",
+         };
+         //send object to database
+         database.ref().child("/players/p2").set(p2);
+         //upon user disconnect
+         database.ref("/players/p2").onDisconnect().remove();
+     }
+})
+
+//-------------player selections-----------------------------------------
+
+$(".select").on("click", function(event) {
+    event.preventDefault();
+    //----------------player 1 selections--------------------
+    // both players must be active for selections
+    if (p1 && p2 && (userName === p1.name) && (playerTurn === 1)) {
+        // takes data value from button
+        var choice = $(this).attr("data-choice");
+        console.log(choice);
+        p1Choice = choice;
+
+        //send to database
+        database.ref().child("/players/p1/choice").set(choice);
+        
+        //set turn to 2
+        playerTurn = 2;
+        database.ref().child("playerTurn").set(2);
+    }
+    //-------------player 2 selections------------------------
+    if (p1 && p2 && (playerTurn === 2)) {
+        //takes data from button
+        var choice = $(this).attr("data-choice");
+        console.log(choice);
+        p2Choice = choice;
+
+        //send to database
+        database.ref().child("/players/p2/choice").set(choice);
+
+        //compare choices after player 2 chooses
+        compare();
+    }
+});
 
 
 
