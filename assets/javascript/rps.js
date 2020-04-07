@@ -94,7 +94,7 @@ database.ref("/players/").on("value", function(snapshot) {
     
     // display player 1's name and scores
     $("#player1Name").html(p1Name);
-    $(".player1stats").html(`Wins: ${p1.wins} Ties:${p1.ties} Losses:${p1.losses} `);
+    $(".player1stats").html(`Wins: ${p1.wins} Ties: ${p1.ties} Losses: ${p1.losses} `);
 
     // wait for player 2 to log in
     $("#notifyMain").html("Waiting for Player 2")
@@ -116,7 +116,7 @@ database.ref("/players/").on("value", function(snapshot) {
     p2Name = p2.name;
     // display player 2's name and scores
     $("#player2Name").html(p2Name);
-    $(".player2stats").html(`Wins: ${p2.wins} Ties:${p2.ties} Losses:${p2.losses} `);
+    $(".player2stats").html(`Wins: ${p2.wins} Ties: ${p2.ties} Losses: ${p2.losses} `);
 
     } else {
         console.log("player 2 not in database");
@@ -164,6 +164,8 @@ database.ref("/playerTurn/").on("value", function(snapshot) {
         console.log("turn1");
         $("#notify1").html("Choose Wisely");
         playerTurn = 1;
+        $("#button1Group").removeClass("invisible");
+        $("#button2Group").addClass("invisible");
         //both players must be logged in
     if (p1 && p2) {
         $("#notify2").html("Please Wait");
@@ -173,6 +175,8 @@ database.ref("/playerTurn/").on("value", function(snapshot) {
         console.log("turn2");
         $("#notify2").html("Choose Wisely");
         playerTurn = 2;
+        $("#button1Group").addClass("invisible");
+        $("#button2Group").removeClass("invisible");
     if (p1 && p2) {
         $("#notify1").html("Please Wait")
         }
@@ -293,7 +297,7 @@ $(".select").on("click", function(event) {
         database.ref().child("playerTurn").set(2);
     }
     //-------------player 2 selections------------------------
-    else {
+    if (p1 && p2 && (userName === p2.name) && (playerTurn === 2)) {
         //takes data from button
         var choice = $(this).attr("data-choice");
         console.log(choice);
