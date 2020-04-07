@@ -92,10 +92,13 @@ database.ref("/players/").on("value", function(snapshot) {
     p1 = snapshot.val().p1;
     p1Name = p1.name;
     
-    // display player 1's name
+    // display player 1's name and scores
     $("#player1Name").html(p1Name);
+    $(".player1stats").html(`Wins: ${p1.wins} Ties:${p1.ties} Losses:${p1.losses} `);
+
     // wait for player 2 to log in
-    $("notify1").html("Waiting For Player 2");
+    $("#notifyMain").html("Waiting for Player 2")
+    $("#notify1").html("Waiting For Player 2");
     
     } else {
         console.log("player 1 not in database");
@@ -105,11 +108,15 @@ database.ref("/players/").on("value", function(snapshot) {
     }
 
     // check database for player 2
-    if (snapshot.child("p1").exists()) {
+    if (snapshot.child("p2").exists()) {
         console.log("player 2 logged in");
 
-    // display player 2's name
+    //set local variables for player 2
+    p2 = snapshot.val().p2;
+    p2Name = p2.name;
+    // display player 2's name and scores
     $("#player2Name").html(p2Name);
+    $(".player2stats").html(`Wins: ${p2.wins} Ties:${p2.ties} Losses:${p2.losses} `);
 
     } else {
         console.log("player 2 not in database");
@@ -127,6 +134,7 @@ database.ref("/players/").on("value", function(snapshot) {
         $("#notify1").html("It is your turn!");
         $("#notify2").html("Wait...");   
     }
+    
     if (!p1 && !p2) {
         $("#player1wins").html("Wins: 0");
         $("#player1ties").html("Ties: 0");
@@ -139,34 +147,37 @@ database.ref("/players/").on("value", function(snapshot) {
         $("#notify2").html("");
 
         $("#chatArea").empty();
-        database.ref("/players/").remove();
+        
         database.ref("/chat/").remove();
         database.ref("/playerTurn/").remove();
         database.ref("/roundOutcome/").remove();
+        database.ref("/players/").remove();
     }
-})
+});
 
 //-------------------database listener for player turns--------------------
 
 database.ref("/playerTurn/").on("value", function(snapshot) {
+
     //default is playerTurn = 1;
     if(snapshot.val() === 1) {
         console.log("turn1");
+        $("#notify1").html("Choose Wisely");
         playerTurn = 1;
         //both players must be logged in
-    } if (p1 && p2) {
-        $("#notify1").html("Choose Wisely");
+    if (p1 && p2) {
         $("#notify2").html("Please Wait");
-    
+        }   
     } else if (snapshot.val() === 2) {
     //same for player 2
         console.log("turn2");
-        playerTurn = 2;
-    } if (p1 && p2) {
         $("#notify2").html("Choose Wisely");
+        playerTurn = 2;
+    if (p1 && p2) {
         $("#notify1").html("Please Wait")
+        }
     }
-})
+});
 
 //-------------player log in-----------------------------------------
 
@@ -203,7 +214,7 @@ $("#start-game").on("click", function(event) {
        //set turn in datbase to player 1
        database.ref().child("/playerTurn").set(1);
        //upon player 1 disconnect
-       database.ref("/players1/p1").onDisconnect().remove();
+       database.ref("/players/p1").onDisconnect().remove();
 
     }  
         //if player 1 exists and player 2 is null, player 2 then added
@@ -226,6 +237,37 @@ $("#start-game").on("click", function(event) {
      }
 })
 
+//------------------Chat Section---------------------------
+//-------------listener for "/messages/"---------------
+//chat display and build chat--------------
+database.ref("/chat/").on("child_added", function (snapshot) {
+//build message
+$("#chatArea").append("<p>" + snapshot.val().chat + "</p>")
+});
+
+//players sending messges-----------------
+$("#enterMessage").on("click", function (event) {
+        if (event.keyCode === 13) {
+        $("#enterMessage").click();
+        }
+//this automatically scrolls the chat display to the bottom every time a message is sent
+        
+        $('#chatArea').animate({
+        scrollTop: $('#chatArea')[0].scrollHeight
+        }, "slow");
+        event.preventDefault();
+            
+        //message input
+        var chat = userName + ": " + $("#inputMessage").val();
+        $("#inputMessage").val("");
+        console.log(chat);
+        //push to database
+        database.ref("/chat/").push({
+        chat: chat,
+        dateAdded: firebase.database.ServerValue.TIMESTAMP
+        })
+        })
+
 //-------------player selections-----------------------------------------
 
 $(".select").on("click", function(event) {
@@ -246,7 +288,7 @@ $(".select").on("click", function(event) {
         database.ref().child("playerTurn").set(2);
     }
     //-------------player 2 selections------------------------
-    if (p1 && p2 && (playerTurn === 2)) {
+    else {
         //takes data from button
         var choice = $(this).attr("data-choice");
         console.log(choice);
@@ -260,38 +302,44 @@ $(".select").on("click", function(event) {
     }
 });
 
+//----------compare choices--------------------------------------
 
+function compare() {
+    if((p1.choice === "rock1" && p2.choice === "rock2") ||
+    (p1.choice === "paper1" && p2.choice === "paper2") ||
+    (p1.choice === "scissors1" && p2.choice === "scissors2")) {
 
+        console.log("tie");
+        database.ref().child("/roundOutcome/").set("Tie!");
+        database.ref().child("/players/p1/ties").set(p1.ties + 1);
+        database.ref().child("/players/p2/ties").set(p2.ties + 1);
+        
+    } else if ((p1.choice === "rock1" && p2.choice === "scissors2") ||
+    (p1.choice === "paper1" && p2.choice === "rock2") ||
+    (p1.choice === "scissors1" && p2.choice === "paper2")) {
+        console.log("player 1 wins");
+        database.ref().child("/roundOutcome/").set("Player 1 wins!");
+        database.ref().child("/players/p1/wins").set(p1.wins + 1);
+        database.ref().child("/players/p2/losses").set(p2.losses + 1);
+    
+    } else if ((p1.choice === "rock1" && p2.choice === "paper2") ||
+    (p1.choice === "paper1" && p2.choice === "scissors2") ||
+    (p1.choice === "scissors1" && p2.choice === "rock2")) {
+        console.log("player 2 wins");
+        database.ref().child("/roundOutcome/").set("Player 2 wins!");
+        database.ref().child("/players/p1/losses").set(p1.losses + 1);
+        database.ref().child("/players/p2/wins").set(p2.wins + 1);
+    
+    }  database.ref("/roundOutcome/").on("value", function(snapshot) {
+            $("#notifyMain").html(snapshot.val());
+            $("#notify1").html(snapshot.val());
+            $("#notify2").html(snapshot.val());
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        });
+        setTimeout(function()  {
+            $("#notifyMain").html("Rock! Paper! Scissors! Shoot!")
+            playerTurn = 1;
+            database.ref().child("/playerTurn/").set(1);
+        }, 3000);
 }
+})

@@ -85,6 +85,17 @@ i {
 }
 
 .player1stats {
+    font-family: 'Miltonian Tattoo', cursive;
+    float: center;
+    text-align: center;
+}
+
+#notifyMain {
+    font-size: 25px;
+}
+
+.player2stats {
+    font-family: 'Miltonian Tattoo', cursive;
     float: center;
     text-align: center;
 }

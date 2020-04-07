@@ -82,7 +82,7 @@
         </div>
       </div>
     </div>
-
+  </div>
     <!-- chat section -->
     <div class="container-fluid">
       <div class="row">
@@ -111,46 +111,56 @@
             <br>
             <div class="card-body" id="playercardBody">
               <div class="mb-0 float-center" role="group" aria-label="buttonGroup" id="button1Group">
-                <button data-choice="rock" type="button" class="btn btn-secondary select"><i
+                <button data-choice="rock1" type="button" class="btn btn-secondary select"><i
                     class="fas fa-guitar"></i></button>
-                <button data-choice="paper" type="button" class="btn btn-secondary select"><i
+                <button data-choice="paper1" type="button" class="btn btn-secondary select"><i
                     class="fas fa-paper-plane"></i></button>
-                <button data-choice="scissors" type="button" class="btn btn-secondary select"><i
+                <button data-choice="scissors1" type="button" class="btn btn-secondary select"><i
                     class="fas fa-cut"></i></button>
               </div>
               <br>
               <div class="player1stats">
-                <h6 id="player1wins" class="mb-0 float-center">Wins: 0</h6>
-                <h6 id="player1ties" class="mb-0 float-center">Ties: 0</h6>
-                <h6 id="player1losses" class="mb-0 float-center">Losses: 0</h6>
+                <h6  class="mb-0 float-center">Wins: 0</h6>
+                <h6  class="mb-0 float-center">Ties: 0</h6>
+                <h6  class="mb-0 float-center">Losses: 0</h6>
               </div>
               <br>
               <h5 id="notify1"></h5>
             </div>
           </div>
         </div>
-        <div class="col-sm-2" id="main-update"></div>
+        <div class="col-lg-2">
+          <br>
+        <div class="row">
+          <br>
+        <div class="col-lg-2"></div>
+        <h6 class="col-lg-8" id="notifyMain"></h6>
+        <div class="col-lg-2"></div>
+          <br>
+        </div>
+          <br>
+       </div>
         <!-- player 2 card -->
         <div class="col-lg-4">
           <div class="card">
-            <div class="card-header" id="notifyMain">
+            <div class="card-header" id="player2Header">
               Player 2
             </div>
             <br>
             <div class="card-body" id="playercardBody">
               <div class="mb-0 float-center" role="group" aria-label="buttonGroup" id="button2Group">
-                <button data-choice="rock" type="button" class="btn btn-secondary select"><i
+                <button data-choice="rock2" type="button" class="btn btn-secondary select"><i
                     class="fas fa-guitar"></i></button>
-                <button data-choice="paper" type="button" class="btn btn-secondary select"><i
+                <button data-choice="paper2" type="button" class="btn btn-secondary select"><i
                     class="fas fa-paper-plane"></i></button>
-                <button data-choice="scissors" type="button" class="btn btn-secondary select"><i
+                <button data-choice="scissors2" type="button" class="btn btn-secondary select"><i
                     class="fas fa-cut"></i></button>
               </div>
               <br>
               <div class="player2stats">
-                <h6 id="player2wins" class="mb-0 float-center">Wins: 0</h6>
-                <h6 if="player2ties" class="mb-0 float-center">Ties: 0</h6>
-                <h6 id="player2losses" class="mb-0 float-center">Losses: 0</h6>
+                <h6 class="mb-0 float-center">Wins: 0</h6>
+                <h6 class="mb-0 float-center">Ties: 0</h6>
+                <h6 class="mb-0 float-center">Losses: 0</h6>
               </div>
               <br>
               <h5 id="notify2"></h5>
