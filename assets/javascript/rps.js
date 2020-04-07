@@ -245,6 +245,11 @@ database.ref("/chat/").on("child_added", function (snapshot) {
 $("#chatArea").append("<p>" + snapshot.val().chat + "</p>")
 });
 
+//---------if a user disconnects------------------------------
+database.ref("/players/").on("child_removed", function(snapshot) {
+    $("#chatArea").append("<p>" + snapshot.val().name + " has logged off");
+});
+
 //players sending messges-----------------
 $("#enterMessage").on("click", function (event) {
         if (event.keyCode === 13) {

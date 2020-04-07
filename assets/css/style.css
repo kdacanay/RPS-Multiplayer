@@ -10,35 +10,35 @@ font-family: 'Barrio', cursive; */
 
 h3 {
     text-align: center;
-    font-family: 'Barrio', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
     font-size: 50px;
 }
 
 h5 {
-    font-family: 'Miltonian Tattoo', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
 }
 
 button {
-    font-family: 'Miltonian Tattoo', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
 }
 
 h6 {
-    font-family: 'Miltonian Tattoo', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
 }
 
 h1 {
-    font-family: 'Barrio', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
     text-align: center;
     font-size: 55px;
 }
 
 .card-header {
-    font-family: 'Barrio', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
 }
 
 #round-update {
     text-align: center;
-    font-family: 'Barrio', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
     font-size: 30px;
 }
 
@@ -80,12 +80,12 @@ i {
 
 #main-update {
     text-align: center;
-    font-family: 'Barrio', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
     font-size: 25px;
 }
 
 .player1stats {
-    font-family: 'Miltonian Tattoo', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
     float: center;
     text-align: center;
 }
@@ -95,7 +95,7 @@ i {
 }
 
 .player2stats {
-    font-family: 'Miltonian Tattoo', cursive;
+    font-family: 'Fontdiner Swanky', cursive;
     float: center;
     text-align: center;
 }
