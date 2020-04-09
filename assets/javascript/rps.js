@@ -180,6 +180,9 @@ database.ref("/playerTurn/").on("value", function(snapshot) {
     if (p1 && p2) {
         $("#notify1").html("Please Wait")
         }
+    } else if (snapshot.val() === 3) {
+        console.log("turn3");
+        compare(p1.choice, p2.choice);
     }
 });
 
@@ -305,50 +308,64 @@ $(".select").on("click", function(event) {
 
         //send to database
         database.ref().child("/players/p2/choice").set(choice);
-
-        //compare choices after player 2 chooses
-        compare();
+        playerTurn = 3;
+        database.ref().child("playerTurn").set(3);
+        console.log("ok")
     }
 });
 
 //----------compare choices--------------------------------------
 
-function compare() {
-    if((p1.choice === "rock1" && p2.choice === "rock2") ||
-    (p1.choice === "paper1" && p2.choice === "paper2") ||
-    (p1.choice === "scissors1" && p2.choice === "scissors2")) {
+function compare(p1Choice, p2Choice) {
+    var playerOneWon = function() {
+        if (p1) {
+ 
+            console.log("player 1 wins");
+            database.ref().child("/players/p1/wins").set(p1.wins + 1);
+            database.ref().child("/players/p2/losses").set(p2.losses + 1);
+            $("#notifyMain").html(p1Name + "Wins!");
+            $("#notify1").html("You Win!");
+            $("#notify2").html("You Lose!");
+        }
+    };
+
+    var playerTwoWon = function() {
+        if (p2) {
+  
+            console.log("player 2 wins");
+            database.ref().child("/players/p1/losses").set(p1.losses + 1);
+            database.ref().child("/players/p2/wins").set(p2.wins + 1);
+            $("#notifyMain").html(p2Name + "Wins!");
+            $("#notify1").html("You Lose!");
+            $("#notify2").html("You Win!");
+        }
+    };
+
+    var tie = function()  {
 
         console.log("tie");
-        database.ref().child("/roundOutcome/").set("Tie!");
         database.ref().child("/players/p1/ties").set(p1.ties + 1);
         database.ref().child("/players/p2/ties").set(p2.ties + 1);
-        
-    } else if ((p1.choice === "rock1" && p2.choice === "scissors2") ||
-    (p1.choice === "paper1" && p2.choice === "rock2") ||
-    (p1.choice === "scissors1" && p2.choice === "paper2")) {
-        console.log("player 1 wins");
-        database.ref().child("/roundOutcome/").set("Player 1 wins!");
-        database.ref().child("/players/p1/wins").set(p1.wins + 1);
-        database.ref().child("/players/p2/losses").set(p2.losses + 1);
-    
-    } else if ((p1.choice === "rock1" && p2.choice === "paper2") ||
-    (p1.choice === "paper1" && p2.choice === "scissors2") ||
-    (p1.choice === "scissors1" && p2.choice === "rock2")) {
-        console.log("player 2 wins");
-        database.ref().child("/roundOutcome/").set("Player 2 wins!");
-        database.ref().child("/players/p1/losses").set(p1.losses + 1);
-        database.ref().child("/players/p2/wins").set(p2.wins + 1);
-    
-    }  database.ref("/roundOutcome/").on("value", function(snapshot) {
-            $("#notifyMain").html(snapshot.val());
-            $("#notify1").html(snapshot.val());
-            $("#notify2").html(snapshot.val());
-
-        });
-        setTimeout(function()  {
-            $("#notifyMain").html("Rock! Paper! Scissors! Shoot!")
-            playerTurn = 1;
-            database.ref().child("/playerTurn/").set(1);
-        }, 3000);
+        $("#notifyMain").html("Tie Game!");
+        $("#notify1").html("Draw!");
+        $("#notify2").html("Draw!");
+    }
+    if((p1Choice === "rock1" && p2Choice === "rock2") ||
+    (p1Choice === "paper1" && p2Choice === "paper2") ||
+    (p1Choice === "scissors1" && p2Choice === "scissors2")) {
+        tie ();
+    } else if ((p1Choice === "rock1" && p2Choice === "scissors2") ||
+    (p1Choice === "paper1" && p2Choice === "rock2") ||
+    (p1Choice === "scissors1" && p2Choice === "paper2")) {
+        playerOneWon();
+    } else if ((p1Choice === "rock1" && p2Choice === "paper2") ||
+    (p1Choice === "paper1" && p2Choice === "scissors2") ||
+    (p1Choice === "scissors1" && p2Choice === "rock2")) {
+        playerTwoWon();
+    }    setTimeout(function()  {
+        $("#notifyMain").html("Rock! Paper! Scissors! Shoot!")
+        playerTurn = 1;
+        database.ref().child("/playerTurn/").set(1);
+    }, 3000);
 }
 })
