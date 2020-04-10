@@ -113,8 +113,8 @@
         <!-- player 1 card  -->
         <div class="col-lg-1"></div>
         <div class="col-lg-4">
-          <div class="card">
-            <div class="card-header color: purple" id="player1Header">
+          <div class="card player1card turn1" >
+            <div class="card-header headerTurn1 glow" id="player1Header">
               Player 1
             </div>
             <br>
@@ -143,7 +143,7 @@
         <div class="row">
           <br>
         <div class="col-lg-2"></div>
-        <h6 class="col-lg-8" id="notifyMain"></h6>
+        <h6 class="card card-header col-lg-8" id="notifyMain"></h6>
         <div class="col-lg-2"></div>
           <br>
         </div>
@@ -151,8 +151,8 @@
        </div>
         <!-- player 2 card -->
         <div class="col-lg-4">
-          <div class="card">
-            <div class="card-header" id="player2Header">
+          <div class="card player2card turn2">
+            <div class="card-header headerTurn2 glow" id="player2Header">
               Player 2
             </div>
             <br>
@@ -180,17 +180,21 @@
         <div class="col-lg-1"></div>
       </div>
     </div>
+  <br>
+  <br>
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-2"></div>
       <div class="col-md-8">
+      <div class="card card-header" id="message-card">
         <form>
           <label for="player"></label>
           <input type="message" class="form-control" placeholder="Say Something and Press Enter"
             id="inputMessage" autocomplete="false">
           <br>
-          <button type="enter" class="btn-secondary" id="enterMessage">Enter</button>
+          <button type="enter" class="btn btn-secondary" id="enterMessage">Enter</button>
         </form>
+      </div>
       </div>
       <div class="col-md-2"></div>
     </div>

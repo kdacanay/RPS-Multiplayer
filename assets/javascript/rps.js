@@ -158,6 +158,7 @@ database.ref("/players/").on("value", function(snapshot) {
     
     // display player 1's name and scores
     $("#player1Name").html(p1Name);
+    $("#player1Header").html(p1Name);
     $(".player1stats").html(`Wins: ${p1.wins} Ties: ${p1.ties} Losses: ${p1.losses} `);
 
     // wait for player 2 to log in
@@ -180,6 +181,7 @@ database.ref("/players/").on("value", function(snapshot) {
     p2Name = p2.name;
     // display player 2's name and scores
     $("#player2Name").html(p2Name);
+    $("#player2Header").html(p2Name);
     $(".player2stats").html(`Wins: ${p2.wins} Ties: ${p2.ties} Losses: ${p2.losses} `);
 
     } else {
@@ -230,6 +232,13 @@ database.ref("/playerTurn/").on("value", function(snapshot) {
         playerTurn = 1;
         $("#button1Group").removeClass("invisible");
         $("#button2Group").addClass("invisible");
+        //highlights player card when it is their turn
+        $(".player1card").addClass("turn1");
+        $("#player1Header").addClass("headerTurn1");
+        $("#player1Header").addClass("glow");
+        $(".player2card").removeClass("turn2");
+        $("#player2Header").removeClass("headerTurn2");
+        $("#player2Header").removeClass("glow");
         //both players must be logged in
     if (p1 && p2) {
         $("#notify2").html("Please Wait");
@@ -241,6 +250,13 @@ database.ref("/playerTurn/").on("value", function(snapshot) {
         playerTurn = 2;
         $("#button1Group").addClass("invisible");
         $("#button2Group").removeClass("invisible");
+        //highlights player card when it is their turn
+        $(".player2card").addClass("turn2");
+        $("#player2Header").addClass("headerTurn2");
+        $("#player2Header").addClass("glow");
+        $(".player1card").removeClass("turn1");
+        $("#player1Header").removeClass("headerTurn1");
+        $("#player1Header").removeClass("glow");
     if (p1 && p2) {
         $("#notify1").html("Please Wait")
         }
@@ -389,7 +405,7 @@ function compare(p1Choice, p2Choice) {
             console.log("player 1 wins");
             database.ref().child("/players/p1/wins").set(p1.wins + 1);
             database.ref().child("/players/p2/losses").set(p2.losses + 1);
-            $("#notifyMain").html(p1Name + "Wins!");
+            $("#notifyMain").html(p1Name + " Wins!");
             $("#notify1").html("You Win!");
             $("#notify2").html("You Lose!");
         }
@@ -401,7 +417,7 @@ function compare(p1Choice, p2Choice) {
             console.log("player 2 wins");
             database.ref().child("/players/p1/losses").set(p1.losses + 1);
             database.ref().child("/players/p2/wins").set(p2.wins + 1);
-            $("#notifyMain").html(p2Name + "Wins!");
+            $("#notifyMain").html(p2Name + " Wins!");
             $("#notify1").html("You Lose!");
             $("#notify2").html("You Win!");
         }

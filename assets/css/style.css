@@ -11,12 +11,16 @@ body {
 }
 .card {
     text-align: center;
+    background-color: #788995;
+    color: #D1DDE5;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
 }
 
 h3 {
     text-align: center;
     font-family: 'Fontdiner Swanky', cursive;
     font-size: 50px;
+    text-shadow: -1px -2px 0 #535E66, 1px -2px 0 #535E66, -1px 2px 0 #535E66, 1px 2px 0 #535E66;
 }
 
 h5 {
@@ -35,10 +39,16 @@ h1 {
     font-family: 'Fontdiner Swanky', cursive;
     text-align: center;
     font-size: 40px;
+    text-shadow: -1px -2px 0 #535E66, 1px -2px 0 #535E66, -1px 2px 0 #535E66, 1px 2px 0 #535E66;
 }
 
 .card-header {
     font-family: 'Fontdiner Swanky', cursive;
+    font-size: 25px;
+    background-color: #535E66;
+    color: #D1DDE5;
+    text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    text-transform: uppercase;
 }
 
 #round-update {
@@ -62,24 +72,32 @@ i {
 
 #buttonGroup1 {
     text-align: center;
+    
 }
 
 #buttonGroup2 {
     text-align: center;
 }
-
+.btn {
+    border: 1px solid black;
+    border-color: black;
+}
+.btn:hover {
+    background-color: #75B5E5;
+}
 #chatArea {
     max-width: 100%;
     overflow: auto;
     resize: none;
     max-height: 75px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
 
-#player1name {
+#player1Name {
     text-transform: uppercase;
 }
 
-#player2name {
+#player2Name {
     text-transform: uppercase;
 }
 
@@ -87,6 +105,7 @@ i {
     text-align: center;
     font-family: 'Fontdiner Swanky', cursive;
     font-size: 25px;
+    text-shadow: -1px -2px 0 #535E66, 1px -2px 0 #535E66, -1px 2px 0 #535E66, 1px 2px 0 #535E66;
 }
 
 .player1stats {
@@ -96,7 +115,7 @@ i {
 }
 
 #notifyMain {
-    font-size: 25px;
+    font-size: 20px;
 }
 
 .player2stats {
@@ -119,8 +138,44 @@ i {
     right: 0;
     opacity: 0; 
   }
+  form {
+      font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  }
+  #message-card{
+      background-color: #788995;
+  }
+  .turn1 {
+      border: 10px solid #75B5E5;
+  }
+  .headerTurn1 {
+    color: #788995;
+    text-shadow: -1px -2px 0 #75B5E5, 1px -2px 0 #75B5E5, -1px 2px 0 #75B5E5, 1px 2px 0 #75B5E5;
+  }
+  .headerTurn2 {
+    color: #788995;
+    text-shadow: -1px -2px 0 #75B5E5, 1px -2px 0 #75B5E5, -1px 2px 0 #75B5E5, 1px 2px 0 #75B5E5;
+  }
+  .turn2 {
+      border: 10px solid #75B5E5;
+  }
 
+  .glow {
+    text-align: center;
+    -webkit-animation: glow .5s ease-in-out infinite alternate;
+    -moz-animation: glow .5s ease-in-out infinite alternate;
+    animation: glow .5s ease-in-out infinite alternate;
+  }
   
+  @-webkit-keyframes glow {
+    from {
+        text-shadow: -1px -2px 0 #75B5E5, 1px -2px 0 #75B5E5, -1px 2px 0 #75B5E5, 1px 2px 0 #75B5E5;
+    }
+    to {
+        text-shadow: 2px 0px 0 #75B5E5, 3px 0px 0 #75B5E5, 1px 4px 0 #75B5E5, 2px 3px 0 #75B5E5;
+    }
+  }
+
+
 .animation-target {
     -webkit-animation: animation 865ms linear both;
     animation: animation 865ms linear both;
