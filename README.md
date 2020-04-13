@@ -2,4 +2,4 @@
 
 https://kdacanay.github.io/RPS-Multiplayer/
 
-![Alt text](http://D:/captureportfolioRPS "Optional title")
+![Alt text](../captureportfolioRPS?raw=true "Optional Title")
