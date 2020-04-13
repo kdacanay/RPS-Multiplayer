@@ -2,4 +2,4 @@
 
 https://kdacanay.github.io/RPS-Multiplayer/
 
-![screenShot]url("../images/captureportfolioRPS.png)
+![screenShot]("/images/captureportfolioRPS.png)
