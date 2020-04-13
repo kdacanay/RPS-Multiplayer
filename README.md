@@ -1,5 +1,6 @@
 # RPS-Multiplayer
 
 https://kdacanay.github.io/RPS-Multiplayer/
+<img src="assets/images/captureportfolioRPS.png" width = 500>
 
-![screenShot]("https://github.com/kdacanay/RPS-Multiplayer/blob/master/assets/images/captureportfolioRPS.png") 
+
