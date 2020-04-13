@@ -2,4 +2,4 @@
 
 https://kdacanay.github.io/RPS-Multiplayer/
 
-![Alt text](assets/images/captureportfolioRPS?raw=true "Optional Title")
+![](/assets/images/captureportfolioRPS.png?raw=true "Optional Title)
